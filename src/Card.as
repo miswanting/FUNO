@@ -33,7 +33,14 @@ package
 		public var type:String;
 		public var num:Number;
 		
-		public var tx:Number, ty:Number = 0;
+		public var tx:Number = 0;
+		public var ty:Number = 0;
+		
+		public var seed:Number = 0;
+		
+		private var front:Sprite = new Sprite();
+		private var back:Sprite = new Sprite();
+		public var globalSortIndex:int;
 		
 		[Embed(source = "../lib/UNO_cards_deck1.png")]
 		private var Cards:Class;
@@ -44,14 +51,17 @@ package
 			this.color = color;
 			this.type = type;
 			this.num = num;
+			//this.front.addChild(this.deck1(color, type, num))
+			//this.back.addChild(this.deck1('d', 'b'))
 			this.addChild(this.deck1(color, type, num))
-			trace('卡片的尺寸为：' + this.width.toString() + 'x' + this.height.toString())
+			//trace('卡片的尺寸为：' + this.width.toString() + 'x' + this.height.toString())
 			addEventListener(Event.ADDED_TO_STAGE, startTrace)
 		}
 		
 		public function startTrace(e:Event):void
 		{
 			addEventListener(Event.ENTER_FRAME, core)
+			//addEventListener(Event.REMOVED_FROM_STAGE)
 		}
 		
 		public function core(e:Event):void
@@ -73,15 +83,17 @@ package
 		{
 			if (b)
 			{
+				this.removeChildren()
 				this.addChild(this.deck1(this.color, this.type, this.num))
 			}
 			else
 			{
-				this.addChild(this.deck1('d', 'b', 12))
+				this.removeChildren()
+				this.addChild(this.deck1('d', 'b'))
 			}
 		}
 		
-		private function deck1(color:String, type:String, num:Number):Bitmap
+		private function deck1(color:String, type:String, num:Number = 12):Bitmap
 		{
 			var ix:Number = 0;
 			var iy:Number = 0;
@@ -131,18 +143,11 @@ package
 			var dy:Number = cards.height / 5
 			var x:Number = ix * dx
 			var y:Number = iy * dy
-			var bd:BitmapData = new BitmapData(dx, dy, true);
+			var bd:BitmapData = new BitmapData(dx, dy);
 			var b:Bitmap = new Bitmap(bd);
-			var mask:Sprite = new Sprite();
 			var tmp:Sprite = new Sprite;
-			mask.graphics.beginFill(0x000000);
-			mask.graphics.drawRect(x, y, dx, dy);
-			addChild(mask);
-			mask.x = mask.x - x
-			mask.y = mask.y - y
-			cards.mask = mask
-			cards.x = cards.x - x
-			cards.y = cards.y - y
+			cards.x = -x
+			cards.y = -y
 			tmp.addChild(cards)
 			bd.drawWithQuality(tmp)
 			return b
