@@ -17,7 +17,7 @@ package
 	{
 		private var allCards:Array = new Array();
 		private var timer:Timer = new Timer(2000);
-		public var playerAmount:int = 4;
+		public var playerAmount:int = 6;
 		private var l_player:Array = new Array()
 		
 		private var cardUnused:Array = new Array();
@@ -83,8 +83,8 @@ package
 				for (var i:int = 0; i < playerAmount; i++)
 				{
 					var player:Player = new Player(allCards);
-					var x = stage.stageWidth / 2 - stage.stageWidth / 2.5 * Math.sin(Math.PI / 2 * i)
-					var y = stage.stageHeight / 2 + stage.stageHeight / 2.5 * Math.cos(Math.PI / 2 * i)
+					var x = stage.stageWidth / 2 + stage.stageWidth / 2.5 * Math.sin(2*Math.PI/playerAmount  * i)
+					var y = stage.stageHeight / 2 + stage.stageHeight / 2.5 * Math.cos(2*Math.PI /playerAmount * i)
 					player.handP = new Point(x, y);
 					addChild(player)
 					l_player.push(player);
@@ -212,7 +212,7 @@ package
 				removeChild(tmp)
 				addChild(tmp)
 				l_player[currentPlayerIndex].giveCard(tmp)
-				currentPlayerIndex--;
+				currentPlayerIndex++;
 				tmp_int++;
 				this.timer.delay = 200
 				if (tmp_int >= 7 * playerAmount)
@@ -235,18 +235,18 @@ package
 				currentTask = 'startOfStart';
 				break;
 			case 'startOfStart': 
-				currentPlayerIndex--;
+				currentPlayerIndex++;
 				
 				currentTask = 'start';
 				break;
 			case 'start': 
 				if (isClockwise)
 				{
-					currentPlayerIndex++;
+					currentPlayerIndex--;
 				}
 				else
 				{
-					currentPlayerIndex--;
+					currentPlayerIndex++;
 				}
 				l_player[0].showHand()
 				currentTask = 'exit';
@@ -324,19 +324,19 @@ package
 		
 		private function imove(e:MouseEvent):void
 		{
-			var tx:Number = Math.random() * (stage.stageWidth - e.target.width) + e.target.width / 2
-			var ty:Number = Math.random() * (stage.stageHeight - e.target.height) + e.target.height / 2
-			e.target.tx = tx - e.target.width / 2
-			e.target.ty = ty - e.target.height / 2
-			trace(e.target.seed)
-			for (var i:int = 0; i < allCards.length; i++)
-			{
-				if (e.target.seed == allCards[i].seed)
-				{
-					removeChild(allCards[i])
-					addChild(allCards[i])
-				}
-			}
+			//var tx:Number = Math.random() * (stage.stageWidth - e.target.width) + e.target.width / 2
+			//var ty:Number = Math.random() * (stage.stageHeight - e.target.height) + e.target.height / 2
+			//e.target.tx = tx - e.target.width / 2
+			//e.target.ty = ty - e.target.height / 2
+			//trace(e.target.seed)
+			//for (var i:int = 0; i < allCards.length; i++)
+			//{
+				//if (e.target.seed == allCards[i].seed)
+				//{
+					//removeChild(allCards[i])
+					//addChild(allCards[i])
+				//}
+			//}
 		}
 	
 	}
