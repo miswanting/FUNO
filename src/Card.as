@@ -46,11 +46,23 @@ package
 		private var Cards:Class;
 		private var cards:Bitmap = new Cards();
 		
-		public function Card(color:String, type:String, num:Number)
+		public function Card(color:String, type:String, num:int)
 		{
 			this.color = color;
 			this.type = type;
 			this.num = num;
+			if (this.color == DARK)
+			{
+				this.score = 50;
+			}
+			else if (this.type == NUM)
+			{
+				this.score = num;
+			}
+			else
+			{
+				this.score = 20;
+			}
 			//this.front.addChild(this.deck1(color, type, num))
 			//this.back.addChild(this.deck1('d', 'b'))
 			this.addChild(this.deck1(color, type, num))
