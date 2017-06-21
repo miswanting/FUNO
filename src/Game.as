@@ -316,6 +316,7 @@ package
 					colorChooser.x = (stage.stageWidth - colorChooser.width) / 2
 					colorChooser.y = (stage.stageHeight - colorChooser.height) / 2
 					addChild(colorChooser)
+					this.timer.reset()
 				}
 				else if (cardUsed[cardUsed.length - 1].type == Card.WDF)
 				{
@@ -325,17 +326,13 @@ package
 				else
 				{
 					trace('庄家翻牌为：数字牌:', cardUsed[cardUsed.length - 1].color, cardUsed[cardUsed.length - 1].num)
+					currentTask = '抽牌';
+					this.timer.delay = 1500;
 				}
-				currentTask = '抽牌';
-				this.timer.delay = 1500;
 				break;
+			
 			//核心循环
 			case '抽牌': 
-				////检测Reverse卡
-				//if (cardUsed[cardUsed.length - 1].type == 'r')
-				//{
-				//isClockwise = -isClockwise
-				//}
 				//切换到下一家
 				if (isClockwise == 1)
 				{
@@ -375,7 +372,8 @@ package
 					}
 					this.timer.delay = 1500;
 				}
-				else if (cardUsed[cardUsed.length - 1].type == Card.DT)
+				//检测+2牌
+				if (cardUsed[cardUsed.length - 1].type == Card.DT)
 				{
 					trace('上一张牌为：+2牌。')
 					trace('玩家', currentPlayerIndex, '+2抽牌。')
@@ -406,7 +404,7 @@ package
 					this.timer.delay = 1500;
 				}
 				//检测Wild Draw 4牌
-				else if (cardUsed[cardUsed.length - 1].type == Card.WDF)
+				if (cardUsed[cardUsed.length - 1].type == Card.WDF)
 				{
 					trace('上一张牌为：+4牌。')
 					var tmp:Card = cardUnused.pop()
@@ -416,35 +414,32 @@ package
 					currentTask = '翻牌';
 					this.timer.delay = 1500;
 				}
+				trace('玩家', currentPlayerIndex, '正常抽牌。')
+				var tmp:Card = cardUnused.pop()
+				removeChild(tmp)
+				addChild(tmp)
+				l_player[currentPlayerIndex].giveCard(tmp);
+				if (currentPlayerIndex == 0)
+				{
+					l_player[currentPlayerIndex].cardsInHand[l_player[currentPlayerIndex].cardsInHand.length - 1].isFront = true;
+					l_player[currentPlayerIndex].sortHand()
+					for (var i:int = 0; i < l_player[currentPlayerIndex].cardsInHand.length; i++)
+					{
+						removeChild(l_player[currentPlayerIndex].cardsInHand[i])
+						addChild(l_player[currentPlayerIndex].cardsInHand[i])
+					}
+					if (cardsCanBePlayed().length == 0)
+					{
+						trace('无牌可出！')
+					}
+					currentTask = '翻牌';
+				}
 				else
 				{
-					trace('玩家', currentPlayerIndex, '正常抽牌。')
-					var tmp:Card = cardUnused.pop()
-					removeChild(tmp)
-					addChild(tmp)
-					l_player[currentPlayerIndex].giveCard(tmp);
-					if (currentPlayerIndex == 0)
-					{
-						l_player[currentPlayerIndex].cardsInHand[l_player[currentPlayerIndex].cardsInHand.length - 1].isFront = true;
-						l_player[currentPlayerIndex].sortHand()
-						for (var i:int = 0; i < l_player[currentPlayerIndex].cardsInHand.length; i++)
-						{
-							removeChild(l_player[currentPlayerIndex].cardsInHand[i])
-							addChild(l_player[currentPlayerIndex].cardsInHand[i])
-						}
-						if (cardsCanBePlayed().length == 0)
-						{
-							trace('无牌可出！')
-						}
-						currentTask = '翻牌';
-					}
-					else
-					{
-						currentTask = '电脑出牌';
-					}
-					cardNewlyPlayed = true;
-					this.timer.delay = 1500;
+					currentTask = '电脑出牌';
 				}
+				cardNewlyPlayed = true;
+				this.timer.delay = 1500;
 				break;
 			case '翻牌': 
 				//l_player[currentPlayerIndex].cardsInHand[l_player[currentPlayerIndex].cardsInHand.length - 1].isFront = true;
@@ -463,6 +458,10 @@ package
 				//trace('无牌可出！')
 				//}
 				currentTask = '玩家出牌';
+				for (var i:int = 0; i < l_player[currentPlayerIndex].cardsInHand.length; i++)
+				{
+					l_player[currentPlayerIndex].cardsInHand[i].addEventListener(MouseEvent.MOUSE_UP, playCard)
+				}
 				this.timer.reset()
 				break;
 			case '玩家出牌': 
@@ -508,14 +507,37 @@ package
 				tmp.tx = target.x
 				tmp.ty = target.y
 				cardUsed.push(tmp)
+			}else{
+				currentTask = '抽牌';
+				if (isClockwise == 1)
+				{
+					currentPlayerIndex++;
+				}
+				else
+				{
+					currentPlayerIndex--;
+				}
+				if (currentPlayerIndex >= playerAmount)
+				{
+					currentPlayerIndex = 0;
+				}
+				else if (currentPlayerIndex <= -1)
+				{
+					currentPlayerIndex = playerAmount - 1;
+				}
 			}
 		}
 		
 		private function cardsCanBePlayed():Array
 		{
 			var cardsToPlay:Array = new Array();
+			//for (var i:int = 0; i < cardUsed.length; i++)
+			//{
+				//trace('cardUsed: ', cardUsed[cardUsed.length - 1].color, cardUsed[cardUsed.length - 1].type, cardUsed[cardUsed.length - 1].num)
+			//}
 			for (var i:int = 0; i < l_player[currentPlayerIndex].cardsInHand.length; i++)
 			{
+				//trace('cardsInHand: ', l_player[currentPlayerIndex].cardsInHand[i].color, l_player[currentPlayerIndex].cardsInHand[i].type, l_player[currentPlayerIndex].cardsInHand[i].num);
 				if (l_player[currentPlayerIndex].cardsInHand[i].type == Card.WILD)
 				{
 					cardsToPlay.push(l_player[currentPlayerIndex].cardsInHand[i].seed)
@@ -530,7 +552,10 @@ package
 				}
 				else if (l_player[currentPlayerIndex].cardsInHand[i].type == cardUsed[cardUsed.length - 1].type)
 				{
-					cardsToPlay.push(l_player[currentPlayerIndex].cardsInHand[i].seed)
+					if (l_player[currentPlayerIndex].cardsInHand[i].type != 'n')
+					{
+						cardsToPlay.push(l_player[currentPlayerIndex].cardsInHand[i].seed)
+					}
 				}
 			}
 			return cardsToPlay;
@@ -538,6 +563,31 @@ package
 		
 		private function playCard(e:MouseEvent):void
 		{
+			var found:Boolean = false;
+			var list:Array = cardsCanBePlayed()
+			for (var i:int = 0; i < list.length; i++)
+			{
+				if (e.target.seed == list[i])
+				{
+					found = true;
+				}
+			}
+			if (found)
+			{
+				for (var i:int = 0; i < l_player[currentPlayerIndex].cardsInHand.length; i++)
+				{
+					l_player[currentPlayerIndex].cardsInHand[i].removeEventListener(MouseEvent.MOUSE_UP, playCard)
+				}
+				var tmp:Card = l_player[currentPlayerIndex].fetchCard(e.target.seed)
+				removeChild(tmp)
+				addChild(tmp)
+				var target:Point = getRamUsedCardP()
+				tmp.tx = target.x
+				tmp.ty = target.y
+				cardUsed.push(tmp)
+				l_player[currentPlayerIndex].sortHand()
+				this.timer.start()
+			}
 		}
 		
 		private function getRamUsedCardP():Point
