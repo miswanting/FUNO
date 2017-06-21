@@ -28,9 +28,9 @@ package
 		
 		private var tmp_int:int;
 		private var currentPlayerIndex:int;
-		private var isClockwise:Boolean = false;
 		private var isClockwise:int = -1;
 		
+		private var cardNewlyPlayed:Boolean = false;
 		
 		public function Game()
 		{
@@ -215,6 +215,14 @@ package
 				addChild(tmp)
 				l_player[currentPlayerIndex].giveCard(tmp)
 				currentPlayerIndex++;
+				if (currentPlayerIndex >= playerAmount)
+				{
+					currentPlayerIndex = 0;
+				}
+				else if (currentPlayerIndex <= -1)
+				{
+					currentPlayerIndex = playerAmount - 1;
+				}
 				tmp_int++;
 				this.timer.delay = 200
 				if (tmp_int >= 7 * playerAmount)
@@ -333,6 +341,10 @@ package
 			}
 		}
 		
+		private function playCard(e:MouseEvent):void
+		{
+		}
+		
 		private function getRamUsedCardP():Point
 		{
 			var isCertificated = false;
@@ -425,11 +437,11 @@ package
 			//trace(e.target.seed)
 			//for (var i:int = 0; i < allCards.length; i++)
 			//{
-				//if (e.target.seed == allCards[i].seed)
-				//{
-					//removeChild(allCards[i])
-					//addChild(allCards[i])
-				//}
+			//if (e.target.seed == allCards[i].seed)
+			//{
+			//removeChild(allCards[i])
+			//addChild(allCards[i])
+			//}
 			//}
 		}
 	
