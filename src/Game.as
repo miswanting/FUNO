@@ -85,8 +85,8 @@ package
 				for (var i:int = 0; i < playerAmount; i++)
 				{
 					var player:Player = new Player(allCards);
-					var x = stage.stageWidth / 2 + stage.stageWidth / 2.5 * Math.sin(2*Math.PI/playerAmount  * i)
-					var y = stage.stageHeight / 2 + stage.stageHeight / 2.5 * Math.cos(2*Math.PI /playerAmount * i)
+					var x = stage.stageWidth / 2 + stage.stageWidth / 2.5 * Math.sin(2 * Math.PI / playerAmount * i)
+					var y = stage.stageHeight / 2 + stage.stageHeight / 2.5 * Math.cos(2 * Math.PI / playerAmount * i)
 					player.handP = new Point(x, y);
 					addChild(player)
 					l_player.push(player);
