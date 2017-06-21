@@ -101,7 +101,24 @@ package
 			else
 			{
 				this.removeChildren()
-				this.addChild(this.deck1('d', 'b'))
+				this.addChild(this.deck1(DARK, BACK))
+			}
+		}
+		
+		public function setSub(color:String):void
+		{
+			if (this.type == WILD)
+			{
+				this.removeChildren()
+				this.addChild(this.deck1(color, this.type, this.num))
+			}
+			else if (this.type == WDF)
+			{
+				this.removeChildren()
+				this.addChild(this.deck1(color, this.type, this.num))
+			}
+			else
+			{
 			}
 		}
 		
@@ -123,9 +140,6 @@ package
 			case 'b': 
 				iy = 3;
 				break;
-			case 'd': 
-				iy = 4;
-				break;
 			}
 			switch (type)
 			{
@@ -143,12 +157,45 @@ package
 				break;
 			case 'w': 
 				ix = 0;
+				iy = 4;
+				switch (color)
+				{
+				case 'r': 
+					ix = 3;
+					break;
+				case 'g': 
+					ix = 4;
+					break;
+				case 'y': 
+					ix = 5;
+					break;
+				case 'b': 
+					ix = 6;
+					break;
+				}
 				break;
 			case 'wdf': 
 				ix = 1;
+				iy = 4;
+				switch (color)
+				{
+				case 'r': 
+					ix = 7;
+					break;
+				case 'g': 
+					ix = 8;
+					break;
+				case 'y': 
+					ix = 9;
+					break;
+				case 'b': 
+					ix = 10;
+					break;
+				}
 				break;
 			case 'b': 
 				ix = 12;
+				iy = 4;
 				break;
 			}
 			var dx:Number = cards.width / 13
