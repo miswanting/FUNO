@@ -26,6 +26,7 @@ package
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			// 程序入口
 			trace("程序启动");
+			trace('窗口尺寸：' + stage.stageWidth.toString() + 'x' + stage.stageHeight.toString())
 			showIntro();
 			//addEventListener(Event.ENTER_FRAME, core);
 		}

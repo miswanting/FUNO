@@ -35,7 +35,6 @@ package
 			btn_start.hitTestState = t;
 			btn_start.x = (stage.stageWidth - btn_start.width) / 2
 			btn_start.y = (stage.stageHeight - btn_start.height) / 2
-			trace('窗口尺寸：' + stage.stageWidth.toString() + 'x' + stage.stageHeight.toString())
 			menu.addChild(btn_start);
 			
 			var t:TextField = new TextField;
@@ -49,7 +48,6 @@ package
 			btn_start.hitTestState = t;
 			btn_start.x = (stage.stageWidth - btn_start.width) / 2
 			btn_start.y = (stage.stageHeight - btn_start.height) / 2 + stage.stageHeight / 12
-			trace('窗口尺寸：' + stage.stageWidth.toString() + 'x' + stage.stageHeight.toString())
 			menu.addChild(btn_start);
 			addEventListener(MouseEvent.MOUSE_UP, startSingleGame)
 			
@@ -64,7 +62,6 @@ package
 			btn_start.hitTestState = t;
 			btn_start.x = (stage.stageWidth - btn_start.width) / 2
 			btn_start.y = (stage.stageHeight - btn_start.height) / 2 + stage.stageHeight / 6
-			trace('窗口尺寸：' + stage.stageWidth.toString() + 'x' + stage.stageHeight.toString())
 			menu.addChild(btn_start);
 			addEventListener(MouseEvent.MOUSE_UP, startSingleGame)
 			
@@ -79,7 +76,6 @@ package
 			btn_start.hitTestState = t;
 			btn_start.x = (stage.stageWidth - btn_start.width) / 2
 			btn_start.y = (stage.stageHeight - btn_start.height) / 2 + stage.stageHeight / 4
-			trace('窗口尺寸：' + stage.stageWidth.toString() + 'x' + stage.stageHeight.toString())
 			menu.addChild(btn_start);
 			addEventListener(MouseEvent.MOUSE_UP, startSingleGame)
 		}
