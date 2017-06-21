@@ -17,7 +17,7 @@ package
 	{
 		private var allCards:Array = new Array();
 		private var timer:Timer = new Timer(2000);
-		public var playerAmount:int = 6;
+		public var playerAmount:int = 4;
 		private var l_player:Array = new Array()
 		
 		private var cardUnused:Array = new Array();
