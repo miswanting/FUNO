@@ -29,6 +29,8 @@ package
 		private var tmp_int:int;
 		private var currentPlayerIndex:int;
 		private var isClockwise:Boolean = false;
+		private var isClockwise:int = -1;
+		
 		
 		public function Game()
 		{
@@ -238,9 +240,23 @@ package
 				currentPlayerIndex++;
 				
 				currentTask = 'start';
+				////检测Reverse卡
+				//if (cardUsed[cardUsed.length - 1].type == 'r')
+				//{
+				//isClockwise = -isClockwise
+				//}
+				//切换到下一家
+				if (isClockwise == -1)
+				{
+					currentPlayerIndex--;
+				}
+				else
+				{
+					currentPlayerIndex++;
+				}
 				break;
 			case 'start': 
-				if (isClockwise)
+				if (isClockwise == 1)
 				{
 					currentPlayerIndex--;
 				}
