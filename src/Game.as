@@ -234,12 +234,20 @@ package
 					removeChild(l_player[0].cardsInHand[i])
 					addChild(l_player[0].cardsInHand[i])
 				}
-				currentTask = 'startOfStart';
+				currentTask = 'bossChooseColor';
+				this.timer.delay = 2000;
 				break;
-			case 'startOfStart': 
-				currentPlayerIndex++;
-				
-				currentTask = 'start';
+			case 'bossChooseColor': 
+				var tmp:Card = cardUnused.pop()
+				removeChild(tmp)
+				addChild(tmp)
+				var target:Point = getRamUsedCardP()
+				tmp.tx = target.x
+				tmp.ty = target.y
+				cardUsed.push(tmp)
+				currentTask = 'flipBossColorCard';
+				this.timer.delay = 1000;
+				break;
 				////检测Reverse卡
 				//if (cardUsed[cardUsed.length - 1].type == 'r')
 				//{
