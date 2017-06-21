@@ -261,6 +261,8 @@ package
 				}
 				this.timer.delay = 1500;
 				break;
+			//核心循环
+			case '抽牌': 
 				////检测Reverse卡
 				//if (cardUsed[cardUsed.length - 1].type == 'r')
 				//{
@@ -275,6 +277,33 @@ package
 				{
 					currentPlayerIndex++;
 				}
+				if (currentPlayerIndex >= playerAmount)
+				{
+					currentPlayerIndex = 0;
+				}
+				else if (currentPlayerIndex <= -1)
+				{
+					currentPlayerIndex = playerAmount - 1;
+				}
+				//检测Skip卡
+				if (cardUsed[cardUsed.length - 1].type == 's')
+				{
+					currentTask = '抽牌';
+					this.timer.delay = 1500;
+					break;
+				}
+				//检测draw 2卡
+				if (cardUsed[cardUsed.length - 1].type == 'dt')
+				{
+					var tmp:Card = cardUnused.pop()
+					removeChild(tmp)
+					addChild(tmp)
+					l_player[currentPlayerIndex].giveCard(tmp);
+					currentTask = '翻牌';
+					this.timer.delay = 1500;
+					break;
+				}
+				break;
 				break;
 			case 'start': 
 				if (isClockwise == 1)
