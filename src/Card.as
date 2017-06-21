@@ -50,7 +50,7 @@ package
 		private var Cards:Class;
 		private var cards:Bitmap = new Cards();
 		
-		public function Card(color:String, type:String, num:int)
+		public function Card(color:String, type:String, num:int=0)
 		{
 			this.color = color;
 			this.type = type;
