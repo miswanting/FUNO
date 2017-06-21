@@ -45,20 +45,36 @@ package
 			}
 			card.ty = handP.y - card.height / 2;
 		}
-		public function showHand():void{
-			for (var i:int = 0; i < cardsInHand.length; i++){
+		
+		public function showHand():void
+		{
+			for (var i:int = 0; i < cardsInHand.length; i++)
+			{
 				cardsInHand[i].isFront = true;
 			}
 		}
-		public function sortHand():void{
-			cardsInHand.sortOn('globalSortIndex',Array.NUMERIC);
+		
+		public function sortHand():void
+		{
+			cardsInHand.sortOn('globalSortIndex', Array.NUMERIC);
 			if (isExtend)
 			{
 				var l:Number = cardsInHand[cardsInHand.length - 1].width + cardD * (cardsInHand.length - 1)
 				for (var i:int = 0; i < cardsInHand.length; i++)
 				{
 					cardsInHand[i].tx = handP.x - l / 2 + i * cardD;
-					trace(cardsInHand[i].globalSortIndex)
+				}
+			}
+		}
+		
+		public function fetchCard(seed:Number):*
+		{
+			for (var i:int = 0; i < cardsInHand.length; i++)
+			{
+				if (cardsInHand[i].seed == seed)
+				{
+					var tmp:Card = cardsInHand.removeAt(i)
+					return tmp
 				}
 			}
 		}
