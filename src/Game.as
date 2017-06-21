@@ -312,6 +312,9 @@ package
 				currentTask = '出牌';
 				this.timer.reset()
 				break;
+			case '出牌': 
+				currentTask = '';
+				this.timer.delay = 1000;
 				break;
 			case 'start': 
 				if (isClockwise == 1)
