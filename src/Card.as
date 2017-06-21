@@ -14,12 +14,13 @@ package
 	 */
 	public class Card extends Sprite
 	{
+		//color
 		public static var RED:String = "r";
 		public static var GREEN:String = "g";
 		public static var YELLOW:String = "y";
 		public static var BLUE:String = "b";
 		public static var DARK:String = "d";
-		
+		//type
 		public static var NUM:String = "n";
 		public static var RVS:String = "r";
 		public static var SKIP:String = "s";
@@ -28,10 +29,13 @@ package
 		public static var WDF:String = "wdf";
 		public static var BACK:String = "b";
 		
+		public var sub:String;
+		
 		private var _isFront:Boolean = true;
 		public var color:String;
 		public var type:String;
 		public var num:Number;
+		public var score:int = 0;
 		
 		public var tx:Number = 0;
 		public var ty:Number = 0;
@@ -126,6 +130,7 @@ package
 		{
 			var ix:Number = 0;
 			var iy:Number = 0;
+			
 			switch (color)
 			{
 			case 'r': 
@@ -141,6 +146,7 @@ package
 				iy = 3;
 				break;
 			}
+			
 			switch (type)
 			{
 			case 'n': 
