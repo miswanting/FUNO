@@ -50,7 +50,7 @@ package
 		private var Cards:Class;
 		private var cards:Bitmap = new Cards();
 		
-		public function Card(color:String, type:String, num:int=0)
+		public function Card(color:String, type:String, num:int = 0)
 		{
 			this.color = color;
 			this.type = type;
@@ -111,6 +111,7 @@ package
 		
 		public function setSub(color:String):void
 		{
+			this.color = color
 			if (this.type == WILD)
 			{
 				this.removeChildren()
