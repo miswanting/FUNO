@@ -304,6 +304,14 @@ package
 					break;
 				}
 				break;
+			case '翻牌': 
+				if (currentPlayerIndex == 0)
+				{
+					l_player[currentPlayerIndex].cardsInHand[l_player[currentPlayerIndex].cardsInHand.length - 1].isFront = true;
+				}
+				currentTask = '出牌';
+				this.timer.reset()
+				break;
 				break;
 			case 'start': 
 				if (isClockwise == 1)
