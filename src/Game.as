@@ -248,6 +248,19 @@ package
 				currentTask = 'flipBossColorCard';
 				this.timer.delay = 1000;
 				break;
+			case 'flipBossColorCard': 
+				cardUsed[cardUsed.length - 1].isFront = true;
+				trace(cardUsed[cardUsed.length - 1].color);
+				if (cardUsed[cardUsed.length - 1].type == 'wdf')
+				{
+					currentTask = 'bossChooseColor';
+				}
+				else
+				{
+					currentTask = '抽牌';
+				}
+				this.timer.delay = 1500;
+				break;
 				////检测Reverse卡
 				//if (cardUsed[cardUsed.length - 1].type == 'r')
 				//{
