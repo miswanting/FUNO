@@ -256,6 +256,23 @@ package
 			}
 		}
 		
+		private function getRamUsedCardP():Point
+		{
+			var isCertificated = false;
+			var newPoint:Point = new Point;
+			while (!isCertificated)
+			{
+				var angle:Number = Math.random() * 2 * Math.PI;
+				newPoint.x = stage.stageWidth / 2 + Math.random() * stage.stageWidth / 3 * Math.sin(angle) - allCards[0].width / 2
+				newPoint.y = stage.stageHeight / 2 + Math.random() * stage.stageHeight / 4.5 * Math.cos(angle) - allCards[0].height / 2
+				if (!(stage.stageWidth / 2 - allCards[0].width / 2 * 3 < newPoint.x && newPoint.x < stage.stageWidth / 2 + allCards[0].width / 2 && stage.stageHeight / 2 - allCards[0].height / 2 * 3 < newPoint.y && newPoint.y < stage.stageHeight / 2 + allCards[0].height / 2))
+				{
+					isCertificated = true;
+				}
+			}
+			return newPoint;
+		}
+		
 		public function isAllCardsNotMoving():Boolean
 		{
 			for (var i:int = 0; i < 10; i++)
