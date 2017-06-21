@@ -31,6 +31,9 @@ package
 		private var isClockwise:int = -1;
 		
 		private var cardNewlyPlayed:Boolean = false;
+		private var gameNewlyStarted:Boolean = false;
+		
+		private var colorChooser:Sprite = new Sprite;
 		
 		public function Game()
 		{
@@ -49,7 +52,10 @@ package
 		
 		private function step(e:Event)
 		{
-			trace(currentTask)
+			if (currentTask != 'give7')
+			{
+				trace(currentTask)
+			}
 			switch (currentTask)
 			{
 			case 'coverAllCards': 
@@ -62,7 +68,6 @@ package
 				this.timer.delay = 500
 				break;
 			case 'resetAllCards': 
-				trace(allCards.length)
 				for (var i:int = 0; i < allCards.length; i++)
 				{
 					allCards[i].tx = (stage.stageWidth - allCards[i].width) / 2
@@ -259,14 +264,69 @@ package
 			case 'flipBossColorCard': 
 				cardUsed[cardUsed.length - 1].isFront = true;
 				trace(cardUsed[cardUsed.length - 1].color);
-				if (cardUsed[cardUsed.length - 1].type == 'wdf')
+				gameNewlyStarted = true;
+				if (cardUsed[cardUsed.length - 1].type == Card.RVS)
 				{
+					trace('庄家翻牌为：转向牌。顺序改变。')
+					isClockwise = -isClockwise
+				}
+				else if (cardUsed[cardUsed.length - 1].type == Card.SKIP)
+				{
+					trace('庄家翻牌为：跳过牌。下家任意出。')
+				}
+				else if (cardUsed[cardUsed.length - 1].type == Card.DT)
+				{
+					trace('庄家翻牌为：+2牌。庄家抽两张。')
+					var tmp:Card = cardUnused.pop()
+					removeChild(tmp)
+					addChild(tmp)
+					l_player[currentPlayerIndex].giveCard(tmp)
+					var tmp:Card = cardUnused.pop()
+					removeChild(tmp)
+					addChild(tmp)
+					l_player[currentPlayerIndex].giveCard(tmp)
+				}
+				else if (cardUsed[cardUsed.length - 1].type == Card.WILD)
+				{
+					trace('庄家翻牌为：变色牌。选择颜色。')
+					var r_card:Card = new Card(Card.RED, Card.WILD);
+					var g_card:Card = new Card(Card.GREEN, Card.WILD);
+					var y_card:Card = new Card(Card.YELLOW, Card.WILD);
+					var b_card:Card = new Card(Card.BLUE, Card.WILD);
+					r_card.x = 0;
+					r_card.y = 0;
+					g_card.x = r_card.width;
+					g_card.y = 0;
+					y_card.x = 0;
+					y_card.y = r_card.height;
+					b_card.x = r_card.width;
+					b_card.y = r_card.height;
+					r_card.tx = 0;
+					r_card.ty = 0;
+					g_card.tx = r_card.width;
+					g_card.ty = 0;
+					y_card.tx = 0;
+					y_card.ty = r_card.height;
+					b_card.tx = r_card.width;
+					b_card.ty = r_card.height;
+					colorChooser.addChild(r_card);
+					colorChooser.addChild(g_card);
+					colorChooser.addChild(y_card);
+					colorChooser.addChild(b_card);
+					colorChooser.x = (stage.stageWidth - colorChooser.width) / 2
+					colorChooser.y = (stage.stageHeight - colorChooser.height) / 2
+					addChild(colorChooser)
+				}
+				else if (cardUsed[cardUsed.length - 1].type == Card.WDF)
+				{
+					trace('庄家翻牌为：+4牌。重抽。')
 					currentTask = 'bossChooseColor';
 				}
 				else
 				{
-					currentTask = '抽牌';
+					trace('庄家翻牌为：数字牌:', cardUsed[cardUsed.length - 1].color, cardUsed[cardUsed.length - 1].num)
 				}
+				currentTask = '抽牌';
 				this.timer.delay = 1500;
 				break;
 			//核心循环
@@ -277,7 +337,7 @@ package
 				//isClockwise = -isClockwise
 				//}
 				//切换到下一家
-				if (isClockwise == -1)
+				if (isClockwise == 1)
 				{
 					currentPlayerIndex--;
 				}
@@ -293,35 +353,130 @@ package
 				{
 					currentPlayerIndex = playerAmount - 1;
 				}
-				//检测Skip卡
-				if (cardUsed[cardUsed.length - 1].type == 's')
+				//检测Skip牌
+				if (cardUsed[cardUsed.length - 1].type == Card.SKIP)
 				{
-					currentTask = '抽牌';
+					trace('上一张牌为：跳过牌。')
+					if (cardNewlyPlayed)
+					{
+						currentTask = '抽牌';
+						cardNewlyPlayed = false;
+					}
+					else
+					{
+						if (currentPlayerIndex == 0)
+						{
+							currentTask = '翻牌';
+						}
+						else
+						{
+							currentTask = '电脑出牌';
+						}
+					}
 					this.timer.delay = 1500;
-					break;
 				}
-				//检测draw 2卡
-				if (cardUsed[cardUsed.length - 1].type == 'dt')
+				else if (cardUsed[cardUsed.length - 1].type == Card.DT)
 				{
+					trace('上一张牌为：+2牌。')
+					trace('玩家', currentPlayerIndex, '+2抽牌。')
+					var tmp:Card = cardUnused.pop()
+					removeChild(tmp)
+					addChild(tmp)
+					l_player[currentPlayerIndex].giveCard(tmp);
+					if (currentPlayerIndex == 0)
+					{
+						l_player[currentPlayerIndex].cardsInHand[l_player[currentPlayerIndex].cardsInHand.length - 1].isFront = true;
+						l_player[currentPlayerIndex].sortHand()
+						for (var i:int = 0; i < l_player[currentPlayerIndex].cardsInHand.length; i++)
+						{
+							removeChild(l_player[currentPlayerIndex].cardsInHand[i])
+							addChild(l_player[currentPlayerIndex].cardsInHand[i])
+						}
+						if (cardsCanBePlayed().length == 0)
+						{
+							trace('无牌可出！')
+						}
+						currentTask = '翻牌';
+					}
+					else
+					{
+						currentTask = '电脑出牌';
+					}
+					cardNewlyPlayed = true;
+					this.timer.delay = 1500;
+				}
+				//检测Wild Draw 4牌
+				else if (cardUsed[cardUsed.length - 1].type == Card.WDF)
+				{
+					trace('上一张牌为：+4牌。')
 					var tmp:Card = cardUnused.pop()
 					removeChild(tmp)
 					addChild(tmp)
 					l_player[currentPlayerIndex].giveCard(tmp);
 					currentTask = '翻牌';
 					this.timer.delay = 1500;
-					break;
+				}
+				else
+				{
+					trace('玩家', currentPlayerIndex, '正常抽牌。')
+					var tmp:Card = cardUnused.pop()
+					removeChild(tmp)
+					addChild(tmp)
+					l_player[currentPlayerIndex].giveCard(tmp);
+					if (currentPlayerIndex == 0)
+					{
+						l_player[currentPlayerIndex].cardsInHand[l_player[currentPlayerIndex].cardsInHand.length - 1].isFront = true;
+						l_player[currentPlayerIndex].sortHand()
+						for (var i:int = 0; i < l_player[currentPlayerIndex].cardsInHand.length; i++)
+						{
+							removeChild(l_player[currentPlayerIndex].cardsInHand[i])
+							addChild(l_player[currentPlayerIndex].cardsInHand[i])
+						}
+						if (cardsCanBePlayed().length == 0)
+						{
+							trace('无牌可出！')
+						}
+						currentTask = '翻牌';
+					}
+					else
+					{
+						currentTask = '电脑出牌';
+					}
+					cardNewlyPlayed = true;
+					this.timer.delay = 1500;
 				}
 				break;
 			case '翻牌': 
-				if (currentPlayerIndex == 0)
-				{
-					l_player[currentPlayerIndex].cardsInHand[l_player[currentPlayerIndex].cardsInHand.length - 1].isFront = true;
-				}
-				currentTask = '出牌';
+				//l_player[currentPlayerIndex].cardsInHand[l_player[currentPlayerIndex].cardsInHand.length - 1].isFront = true;
+				currentTask = '调整顺序';
+				this.timer.delay = 500;
+				break;
+			case '调整顺序': 
+				//l_player[currentPlayerIndex].sortHand()
+				//for (var i:int = 0; i < l_player[currentPlayerIndex].cardsInHand.length; i++)
+				//{
+				//removeChild(l_player[currentPlayerIndex].cardsInHand[i])
+				//addChild(l_player[currentPlayerIndex].cardsInHand[i])
+				//}
+				//if (cardsCanBePlayed().length == 0)
+				//{
+				//trace('无牌可出！')
+				//}
+				currentTask = '玩家出牌';
 				this.timer.reset()
 				break;
-			case '出牌': 
-				currentTask = '';
+			case '玩家出牌': 
+				currentTask = '抽牌';
+				this.timer.delay = 1000;
+				break;
+			case '电脑出牌': 
+				debug_ai();
+				currentTask = '电脑出牌的翻牌';
+				this.timer.delay = 1000;
+				break;
+			case '电脑出牌的翻牌': 
+				cardUsed[cardUsed.length - 1].isFront = true;
+				currentTask = '抽牌';
 				this.timer.delay = 1000;
 				break;
 			case 'start': 
@@ -339,6 +494,46 @@ package
 			case 'exit': 
 				this.timer.reset()
 			}
+		}
+		
+		private function debug_ai():void
+		{
+			var cardSeeds:Array = cardsCanBePlayed()
+			if (cardSeeds.length > 0)
+			{
+				var tmp:Card = l_player[currentPlayerIndex].fetchCard(cardSeeds[0])
+				removeChild(tmp)
+				addChild(tmp)
+				var target:Point = getRamUsedCardP()
+				tmp.tx = target.x
+				tmp.ty = target.y
+				cardUsed.push(tmp)
+			}
+		}
+		
+		private function cardsCanBePlayed():Array
+		{
+			var cardsToPlay:Array = new Array();
+			for (var i:int = 0; i < l_player[currentPlayerIndex].cardsInHand.length; i++)
+			{
+				if (l_player[currentPlayerIndex].cardsInHand[i].type == Card.WILD)
+				{
+					cardsToPlay.push(l_player[currentPlayerIndex].cardsInHand[i].seed)
+				}
+				else if (l_player[currentPlayerIndex].cardsInHand[i].type == Card.WDF)
+				{
+					cardsToPlay.push(l_player[currentPlayerIndex].cardsInHand[i].seed)
+				}
+				else if (l_player[currentPlayerIndex].cardsInHand[i].color == cardUsed[cardUsed.length - 1].color)
+				{
+					cardsToPlay.push(l_player[currentPlayerIndex].cardsInHand[i].seed)
+				}
+				else if (l_player[currentPlayerIndex].cardsInHand[i].type == cardUsed[cardUsed.length - 1].type)
+				{
+					cardsToPlay.push(l_player[currentPlayerIndex].cardsInHand[i].seed)
+				}
+			}
+			return cardsToPlay;
 		}
 		
 		private function playCard(e:MouseEvent):void
