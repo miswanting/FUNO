@@ -56,13 +56,16 @@ package
 		
 		public function sortHand():void
 		{
-			cardsInHand.sortOn('globalSortIndex', Array.NUMERIC);
-			if (isExtend)
+			if (cardsInHand.length > 0)
 			{
-				var l:Number = cardsInHand[cardsInHand.length - 1].width + cardD * (cardsInHand.length - 1)
-				for (var i:int = 0; i < cardsInHand.length; i++)
+				cardsInHand.sortOn('globalSortIndex', Array.NUMERIC);
+				if (isExtend)
 				{
-					cardsInHand[i].tx = handP.x - l / 2 + i * cardD;
+					var l:Number = cardsInHand[cardsInHand.length - 1].width + cardD * (cardsInHand.length - 1)
+					for (var i:int = 0; i < cardsInHand.length; i++)
+					{
+						cardsInHand[i].tx = handP.x - l / 2 + i * cardD;
+					}
 				}
 			}
 		}
